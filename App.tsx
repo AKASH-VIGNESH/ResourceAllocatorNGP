@@ -10,6 +10,8 @@ import PrincipalDashboard from './pages/principal/PrincipalDashboard';
 import Layout from './components/Layout';
 import EventDetails from './pages/teacher/EventDetails';
 import MyEvents from './pages/student/MyEvents';
+import './index.css';
+
 
 // --- Auth Context ---
 interface AuthContextType {
