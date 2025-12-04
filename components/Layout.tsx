@@ -15,9 +15,7 @@ import {
 const SidebarItem = ({ to, icon: Icon, label, active }: { to: string; icon: any; label: string; active: boolean }) => (
   <Link 
     to={to} 
-    className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-      active ? 'bg-brand-700 text-white shadow-md' : 'text-brand-100 hover:bg-brand-800'
-    }`}
+    className={`nav-item ${active ? 'active' : ''}`}
   >
     <Icon size={20} />
     <span className="font-medium">{label}</span>
@@ -62,37 +60,34 @@ const Layout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="layout-container">
       {/* Sidebar */}
-      <aside className="w-64 bg-brand-900 text-white flex flex-col shadow-xl z-20">
-        <div className="p-6 border-b border-brand-800 flex items-center space-x-3">
-          <div className="bg-white p-2 rounded-full text-brand-900">
+      <aside className="sidebar">
+        <div className="sidebar-header">
+          <div className="brand-icon">
              <GraduationCap size={24} />
           </div>
           <div>
-            <h1 className="text-lg font-bold leading-tight">Dr. N.G.P. ASC</h1>
-            <p className="text-xs text-brand-300">Resource Allocator</p>
+            <h1 className="text-lg font-bold">Dr. N.G.P. ASC</h1>
+            <p className="text-xs" style={{opacity: 0.7}}>Resource Allocator</p>
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+        <nav className="nav-container">
           {renderNavItems()}
         </nav>
 
-        <div className="p-4 border-t border-brand-800">
-          <div className="flex items-center space-x-3 mb-4 px-2">
-            <div className="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-sm font-bold">
+        <div className="sidebar-footer">
+          <div className="user-profile">
+            <div className="avatar">
               {user?.name.charAt(0)}
             </div>
-            <div className="overflow-hidden">
-              <p className="text-sm font-medium truncate">{user?.name}</p>
-              <p className="text-xs text-brand-300 truncate capitalize">{user?.role.toLowerCase()}</p>
+            <div style={{overflow: 'hidden'}}>
+              <p className="text-sm font-medium" style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{user?.name}</p>
+              <p className="text-xs" style={{opacity: 0.7, textTransform: 'capitalize'}}>{user?.role.toLowerCase()}</p>
             </div>
           </div>
-          <button 
-            onClick={handleLogout}
-            className="w-full flex items-center justify-center space-x-2 bg-brand-800 hover:bg-brand-700 text-white py-2 rounded-md transition-colors text-sm"
-          >
+          <button onClick={handleLogout} className="btn-logout">
             <LogOut size={16} />
             <span>Sign Out</span>
           </button>
@@ -100,12 +95,11 @@ const Layout = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto relative">
-        <header className="bg-white shadow-sm sticky top-0 z-10 px-8 py-4 flex justify-between items-center md:hidden">
-          <h2 className="font-semibold text-gray-800">Resource Allocator</h2>
-          {/* Mobile menu trigger could go here */}
+      <main className="main-content">
+        <header className="mobile-header">
+          <h2 className="font-bold text-gray-800">Resource Allocator</h2>
         </header>
-        <div className="p-4 md:p-8 max-w-7xl mx-auto min-h-full">
+        <div className="content-wrapper">
           <Outlet />
         </div>
       </main>

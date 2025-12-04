@@ -12,7 +12,6 @@ const PrincipalDashboard = () => {
     setEvents(mockService.getEvents());
   }, []);
 
-  // Compute Stats
   const eventsByDept = events.reduce((acc, curr) => {
     acc[curr.department] = (acc[curr.department] || 0) + 1;
     return acc;
@@ -38,65 +37,63 @@ const PrincipalDashboard = () => {
   };
 
   return (
-    <div className="space-y-8 relative">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Principal's Overview</h1>
+    <div className="fade-in">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Principal's Overview</h1>
         <p className="text-gray-500">College-wide resource and event analytics</p>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+      <div className="grid-4 mb-6">
+        <div className="card" style={{ padding: '1.5rem' }}>
           <p className="text-sm font-medium text-gray-500">Total Events</p>
-          <p className="text-3xl font-bold text-brand-600 mt-2">{events.length}</p>
+          <p className="text-2xl font-bold mt-2" style={{ color: 'var(--primary)' }}>{events.length}</p>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="card" style={{ padding: '1.5rem' }}>
           <p className="text-sm font-medium text-gray-500">Today's Events</p>
-          <p className="text-3xl font-bold text-green-600 mt-2">
+          <p className="text-2xl font-bold mt-2" style={{ color: 'var(--success)' }}>
             {events.filter(e => e.date === new Date().toISOString().split('T')[0]).length}
           </p>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="card" style={{ padding: '1.5rem' }}>
           <p className="text-sm font-medium text-gray-500">Student Engagements</p>
-          <p className="text-3xl font-bold text-purple-600 mt-2">{totalStudents}</p>
+          <p className="text-2xl font-bold mt-2" style={{ color: 'var(--purple)' }}>{totalStudents}</p>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="card" style={{ padding: '1.5rem' }}>
           <p className="text-sm font-medium text-gray-500">Active Conflicts</p>
-          <p className="text-3xl font-bold text-red-500 mt-2">0</p>
+          <p className="text-2xl font-bold mt-2" style={{ color: 'var(--danger)' }}>0</p>
         </div>
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900 mb-6">Events per Department</h3>
-          <div className="h-64">
+      <div className="grid-2 mb-6">
+        <div className="card" style={{ padding: '1.5rem', height: '400px', display: 'flex', flexDirection: 'column' }}>
+          <h3 className="text-lg font-bold mb-4">Events per Department</h3>
+          <div style={{ flex: 1 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="name" tick={{fontSize: 12}} />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="events" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="events" fill="var(--primary)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900 mb-6">Upcoming Schedule</h3>
-          <div className="space-y-4 max-h-64 overflow-y-auto pr-2">
+        <div className="card" style={{ padding: '1.5rem', height: '400px', display: 'flex', flexDirection: 'column' }}>
+          <h3 className="text-lg font-bold mb-4">Upcoming Schedule</h3>
+          <div style={{ overflowY: 'auto', flex: 1 }}>
             {events.slice(0, 5).map(e => (
-               <div key={e.id} className="flex items-center p-3 hover:bg-gray-50 rounded-lg border border-gray-100">
-                 <div className="bg-brand-100 text-brand-600 p-2 rounded-lg mr-4 text-center min-w-[3.5rem]">
-                    <span className="block text-xs font-bold uppercase">{new Date(e.date).toLocaleString('default', { month: 'short' })}</span>
-                    <span className="block text-lg font-bold">{new Date(e.date).getDate()}</span>
+               <div key={e.id} style={{ display: 'flex', alignItems: 'center', padding: '0.75rem', marginBottom: '0.5rem', border: '1px solid var(--gray-100)', borderRadius: '0.5rem' }}>
+                 <div style={{ background: 'var(--primary-bg)', color: 'var(--primary)', padding: '0.5rem', borderRadius: '0.5rem', marginRight: '1rem', textAlign: 'center', minWidth: '3.5rem' }}>
+                    <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase' }}>{new Date(e.date).toLocaleString('default', { month: 'short' })}</span>
+                    <span style={{ display: 'block', fontSize: '1.125rem', fontWeight: 'bold' }}>{new Date(e.date).getDate()}</span>
                  </div>
-                 <div className="flex-1">
-                   <h4 className="text-sm font-bold text-gray-900 line-clamp-1">{e.title}</h4>
+                 <div style={{ flex: 1 }}>
+                   <h4 className="text-sm font-bold" style={{ marginBottom: '0.125rem' }}>{e.title}</h4>
                    <p className="text-xs text-gray-500">{e.department} • {mockService.getHalls().find(h => h.id === e.hallId)?.name}</p>
                  </div>
-                 <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                 <span style={{ fontSize: '0.75rem', background: 'var(--gray-100)', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>
                    {e.startTime}
                  </span>
                </div>
@@ -105,43 +102,39 @@ const PrincipalDashboard = () => {
         </div>
       </div>
 
-      {/* Management Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-          <h3 className="text-lg font-bold text-gray-900">All Events Monitor</h3>
-          <button className="text-brand-600 text-sm font-medium hover:underline">View All Reports</button>
+      <div className="card">
+        <div className="card-header">
+          <h3 className="text-lg font-bold">All Events Monitor</h3>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-gray-50 text-gray-500 font-medium">
+        <div className="table-container">
+          <table className="table">
+            <thead>
               <tr>
-                <th className="px-6 py-3">Event</th>
-                <th className="px-6 py-3">Organizer</th>
-                <th className="px-6 py-3">Department</th>
-                <th className="px-6 py-3">Hall</th>
-                <th className="px-6 py-3">Status</th>
-                <th className="px-6 py-3 text-right">Action</th>
+                <th>Event</th>
+                <th>Organizer</th>
+                <th>Department</th>
+                <th>Hall</th>
+                <th>Status</th>
+                <th className="text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody>
               {events.map(event => (
-                <tr key={event.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-medium text-gray-900">{event.title}</td>
-                  <td className="px-6 py-4 text-gray-600">{event.organizerName}</td>
-                  <td className="px-6 py-4 text-gray-500">{event.department}</td>
-                  <td className="px-6 py-4 text-gray-500">{mockService.getHalls().find(h => h.id === event.hallId)?.name}</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                      event.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' : 
-                      event.status === 'CANCELLED' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
-                    }`}>
+                <tr key={event.id}>
+                  <td className="font-medium">{event.title}</td>
+                  <td>{event.organizerName}</td>
+                  <td>{event.department}</td>
+                  <td>{mockService.getHalls().find(h => h.id === event.hallId)?.name}</td>
+                  <td>
+                    <span className={`badge ${event.status === 'CONFIRMED' ? 'badge-success' : 'badge-gray'}`}>
                       {event.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="text-right">
                     <button 
                       onClick={() => handleDeleteClick(event)}
-                      className="text-red-500 hover:text-red-700 p-2 rounded hover:bg-red-50 transition-colors" 
+                      className="btn"
+                      style={{ color: 'var(--danger)', padding: '0.5rem' }}
                       title="Permanently Delete Event"
                     >
                       <Trash2 size={16} />
@@ -154,32 +147,19 @@ const PrincipalDashboard = () => {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
       {eventToDelete && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 animate-in zoom-in-95">
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 text-red-600 mx-auto mb-4">
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div className="card" style={{ maxWidth: '400px', width: '100%', padding: '1.5rem' }}>
+            <div style={{ width: '3rem', height: '3rem', borderRadius: '50%', margin: '0 auto 1rem auto', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--danger-bg)', color: 'var(--danger)' }}>
               <AlertTriangle size={24} />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 text-center mb-2">Delete Event?</h3>
+            <h3 className="text-xl font-bold text-center mb-2">Delete Event?</h3>
             <p className="text-center text-gray-500 text-sm mb-6">
               Are you sure you want to permanently delete <strong>{eventToDelete.title}</strong>? 
-              <br/>This action cannot be undone and will remove all student registrations.
             </p>
-            
-            <div className="flex space-x-3">
-              <button 
-                onClick={() => setEventToDelete(null)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={confirmDelete}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium shadow-sm transition-colors"
-              >
-                Yes, Delete It
-              </button>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button onClick={() => setEventToDelete(null)} className="btn btn-secondary" style={{ flex: 1 }}>Cancel</button>
+              <button onClick={confirmDelete} className="btn btn-danger" style={{ flex: 1 }}>Yes, Delete It</button>
             </div>
           </div>
         </div>

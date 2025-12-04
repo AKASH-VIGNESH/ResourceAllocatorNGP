@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../App';
 import { mockService } from '../../services/mockData';
-import { Hall } from '../../types';
 import { Search, AlertCircle, CheckCircle, Mail, User, Building, Clock, Calendar as CalendarIcon } from 'lucide-react';
 
 const BookHall = () => {
@@ -46,19 +45,17 @@ const BookHall = () => {
     if (!available) {
       setConflictEvent(conflictEvent);
     } else {
-      setStep(2); // Proceed to next part of form
+      setStep(2); 
     }
   };
 
   const handleRequestExchange = () => {
     if (conflictEvent && user) {
-      // Need to construct the proposed event object to send with request
       const proposedEvent = {
         ...formData,
         organizerId: user.id,
         expectedParticipants: Number(formData.expectedParticipants)
       };
-      
       mockService.requestExchange(user.id, conflictEvent, proposedEvent);
       setExchangeSent(true);
     }
@@ -79,34 +76,33 @@ const BookHall = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Book a Hall</h1>
+    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Book a Hall</h1>
         <p className="text-gray-500">Fill in the details below to reserve a venue for your program.</p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="card">
         {/* Progress Bar */}
-        <div className="flex border-b border-gray-200">
-          <div className={`flex-1 py-3 text-center text-sm font-medium ${step === 1 ? 'bg-brand-50 text-brand-600' : 'text-green-600'}`}>
+        <div style={{ display: 'flex', borderBottom: '1px solid var(--gray-200)' }}>
+          <div style={{ flex: 1, padding: '1rem', textAlign: 'center', fontSize: '0.875rem', fontWeight: 500, background: step === 1 ? 'var(--primary-bg)' : 'transparent', color: step === 1 ? 'var(--primary)' : 'var(--success-text)' }}>
             1. Availability Check
           </div>
-          <div className={`flex-1 py-3 text-center text-sm font-medium ${step === 2 ? 'bg-brand-50 text-brand-600' : 'text-gray-400'}`}>
+          <div style={{ flex: 1, padding: '1rem', textAlign: 'center', fontSize: '0.875rem', fontWeight: 500, background: step === 2 ? 'var(--primary-bg)' : 'transparent', color: step === 2 ? 'var(--primary)' : 'var(--gray-400)' }}>
             2. Program Details
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8">
-          {/* Step 1: Availability Check */}
-          <div className={step === 1 ? 'block' : 'hidden'}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
-                <label htmlFor="hallId" className="block text-sm font-medium text-gray-700 mb-1">Select Hall</label>
+        <form onSubmit={handleSubmit} style={{ padding: '2rem' }}>
+          {/* Step 1 */}
+          <div style={{ display: step === 1 ? 'block' : 'none' }}>
+            <div className="grid-2">
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label className="input-label">Select Hall</label>
                 <select 
-                  id="hallId"
                   name="hallId"
                   required
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none bg-white"
+                  className="form-input"
                   value={formData.hallId}
                   onChange={handleChange}
                 >
@@ -118,19 +114,16 @@ const BookHall = () => {
               </div>
 
               <div>
-                <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">Program Date</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <CalendarIcon size={18} className="text-black" />
-                  </div>
+                <label className="input-label">Program Date</label>
+                <div style={{ position: 'relative' }}>
+                  <CalendarIcon size={18} style={{ position: 'absolute', left: '10px', top: '10px', pointerEvents: 'none' }} />
                   <input 
-                    id="date"
                     type="date" 
                     name="date"
                     required
                     min={new Date().toISOString().split('T')[0]}
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none text-gray-900"
-                    style={{ colorScheme: 'light' }}
+                    className="form-input"
+                    style={{ paddingLeft: '2.5rem' }}
                     value={formData.date}
                     onChange={handleChange}
                   />
@@ -140,18 +133,15 @@ const BookHall = () => {
               <div>{/* Spacer */}</div>
 
               <div>
-                <label htmlFor="startTime" className="block text-sm font-medium text-gray-700 mb-1">Time Duration (From)</label>
-                <div className="relative">
-                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Clock size={18} className="text-black" />
-                  </div>
+                <label className="input-label">Start Time</label>
+                <div style={{ position: 'relative' }}>
+                  <Clock size={18} style={{ position: 'absolute', left: '10px', top: '10px', pointerEvents: 'none' }} />
                   <input 
-                    id="startTime"
                     type="time" 
                     name="startTime"
                     required
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none text-gray-900"
-                    style={{ colorScheme: 'light' }}
+                    className="form-input"
+                    style={{ paddingLeft: '2.5rem' }}
                     value={formData.startTime}
                     onChange={handleChange}
                   />
@@ -159,18 +149,15 @@ const BookHall = () => {
               </div>
 
               <div>
-                <label htmlFor="endTime" className="block text-sm font-medium text-gray-700 mb-1">Time Duration (To)</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Clock size={18} className="text-black" />
-                  </div>
+                <label className="input-label">End Time</label>
+                <div style={{ position: 'relative' }}>
+                   <Clock size={18} style={{ position: 'absolute', left: '10px', top: '10px', pointerEvents: 'none' }} />
                   <input 
-                    id="endTime"
                     type="time" 
                     name="endTime"
                     required
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none text-gray-900"
-                    style={{ colorScheme: 'light' }}
+                    className="form-input"
+                    style={{ paddingLeft: '2.5rem' }}
                     value={formData.endTime}
                     onChange={handleChange}
                   />
@@ -180,23 +167,23 @@ const BookHall = () => {
 
             {/* Conflict UI */}
             {conflictEvent && (
-              <div className="mt-6 bg-red-50 border border-red-200 rounded-lg p-4 animate-in fade-in slide-in-from-top-2">
-                <div className="flex items-start">
-                  <AlertCircle className="text-red-600 mt-1 mr-3" size={20} />
-                  <div className="flex-1">
-                    <h3 className="text-red-800 font-semibold">Hall Unavailable</h3>
-                    <p className="text-red-700 text-sm mt-1">
-                      Already booked by <strong>{conflictEvent.organizerName}</strong> for "{conflictEvent.title}" ({conflictEvent.startTime} - {conflictEvent.endTime}).
+              <div style={{ marginTop: '1.5rem', background: 'var(--danger-bg)', border: '1px solid #fca5a5', borderRadius: '0.5rem', padding: '1rem', animation: 'fadeIn 0.3s' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                  <AlertCircle className="mr-2" size={20} color="var(--danger-text)" />
+                  <div style={{ flex: 1 }}>
+                    <h3 style={{ color: 'var(--danger-text)', fontWeight: 600 }}>Hall Unavailable</h3>
+                    <p style={{ color: 'var(--danger-text)', fontSize: '0.875rem' }}>
+                      Booked by <strong>{conflictEvent.organizerName}</strong> ({conflictEvent.startTime} - {conflictEvent.endTime}).
                     </p>
                     
                     {!exchangeSent ? (
-                      <div className="mt-3">
-                         <p className="text-xs text-red-600 mb-2">Fill in your program details below to request a swap.</p>
+                      <div className="mt-2">
                          <input 
                             type="text"
                             name="title"
-                            placeholder="Your Program Name (Required for Request)"
-                            className="w-full px-3 py-1.5 mb-2 bg-white border border-red-300 rounded text-sm"
+                            placeholder="Your Program Name (Required)"
+                            className="form-input"
+                            style={{ padding: '0.25rem 0.5rem', marginBottom: '0.5rem', fontSize: '0.875rem' }}
                             value={formData.title}
                             onChange={handleChange}
                          />
@@ -204,16 +191,17 @@ const BookHall = () => {
                           type="button"
                           onClick={handleRequestExchange}
                           disabled={!formData.title}
-                          className="flex items-center text-sm bg-white border border-red-300 text-red-700 px-3 py-1.5 rounded-md hover:bg-red-50 transition-colors disabled:opacity-50"
+                          className="btn btn-secondary"
+                          style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}
                         >
                           <Mail size={14} className="mr-2" />
-                          Request Exchange via Email
+                          Request Exchange
                         </button>
                       </div>
                     ) : (
-                      <div className="mt-3 flex items-center text-sm text-green-700 font-medium">
+                      <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', fontSize: '0.875rem', color: 'var(--success-text)', fontWeight: 500 }}>
                         <CheckCircle size={16} className="mr-2" />
-                        Exchange request sent to {conflictEvent.organizerName}!
+                        Exchange request sent!
                       </div>
                     )}
                   </div>
@@ -221,109 +209,100 @@ const BookHall = () => {
               </div>
             )}
 
-            <div className="mt-8 flex justify-end">
+            <div className="mt-4 text-right">
               <button 
                 type="button"
                 onClick={checkAvailability}
                 disabled={!formData.date || !formData.startTime || !formData.endTime || !formData.hallId}
-                className="bg-brand-600 text-white px-6 py-2.5 rounded-lg hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md"
+                className="btn btn-primary"
               >
                 Check Availability <Search size={16} className="ml-2" />
               </button>
             </div>
           </div>
 
-          {/* Step 2: Event Details */}
+          {/* Step 2 */}
           {step === 2 && (
-            <div className="animate-in fade-in slide-in-from-right-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                {/* Auto-filled / Read-only Fields */}
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="fade-in">
+              <div className="grid-2">
+                <div style={{ gridColumn: '1 / -1', background: 'var(--gray-50)', padding: '1rem', borderRadius: '0.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Department Name</label>
-                    <div className="flex items-center text-gray-700 font-medium">
+                    <label className="text-xs font-bold text-gray-500 uppercase">Department</label>
+                    <div style={{ display: 'flex', alignItems: 'center', fontWeight: 500 }}>
                       <Building size={16} className="mr-2 text-gray-400" />
                       {formData.department}
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Organizer Name</label>
-                    <div className="flex items-center text-gray-700 font-medium">
+                    <label className="text-xs font-bold text-gray-500 uppercase">Organizer</label>
+                    <div style={{ display: 'flex', alignItems: 'center', fontWeight: 500 }}>
                        <User size={16} className="mr-2 text-gray-400" />
                        {formData.organizerName}
                     </div>
                   </div>
                 </div>
 
-                <div className="md:col-span-2">
-                  <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Name of the Program</label>
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label className="input-label">Program Name</label>
                   <input 
-                    id="title"
                     type="text" 
                     name="title"
                     required
-                    placeholder="e.g., Annual Science Symposium"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                    className="form-input"
                     value={formData.title}
                     onChange={handleChange}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="guestName" className="block text-sm font-medium text-gray-700 mb-1">Name of the Chief Guest</label>
+                  <label className="input-label">Chief Guest</label>
                   <input 
-                    id="guestName"
                     type="text" 
                     name="guestName"
                     required
-                    placeholder="e.g., Dr. A. P. J. Abdul Kalam"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                    className="form-input"
                     value={formData.guestName}
                     onChange={handleChange}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="expectedParticipants" className="block text-sm font-medium text-gray-700 mb-1">Number of Participants</label>
+                  <label className="input-label">Participants</label>
                   <input 
-                    id="expectedParticipants"
                     type="number" 
                     name="expectedParticipants"
                     required
                     min="1"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                    className="form-input"
                     value={formData.expectedParticipants}
                     onChange={handleChange}
                   />
                 </div>
 
-                <div className="md:col-span-2">
-                  <label htmlFor="organizerContact" className="block text-sm font-medium text-gray-700 mb-1">Organizer Contact Number</label>
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label className="input-label">Contact Number</label>
                   <input 
-                    id="organizerContact"
                     type="tel" 
                     name="organizerContact"
                     required
-                    placeholder="e.g., 9876543210"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                    className="form-input"
                     value={formData.organizerContact}
                     onChange={handleChange}
                   />
                 </div>
               </div>
 
-              <div className="mt-8 flex justify-between items-center border-t border-gray-100 pt-6">
+              <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--gray-100)', paddingTop: '1.5rem' }}>
                 <button 
                   type="button"
                   onClick={() => setStep(1)}
-                  className="text-gray-600 hover:text-gray-900 font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="btn btn-secondary"
                 >
-                  Back to Availability
+                  Back
                 </button>
                 <button 
                   type="submit"
-                  className="bg-brand-600 text-white px-8 py-3 rounded-lg hover:bg-brand-700 transition-colors shadow-lg shadow-brand-200 font-medium flex items-center"
+                  className="btn btn-primary"
                 >
                   Confirm Booking <CheckCircle size={18} className="ml-2" />
                 </button>

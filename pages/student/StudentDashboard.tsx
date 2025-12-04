@@ -10,7 +10,6 @@ const StudentDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [registeringId, setRegisteringId] = useState<string | null>(null);
 
-  // Form state for registration modal
   const [regForm, setRegForm] = useState({ rollNo: '', phone: '' });
 
   useEffect(() => {
@@ -25,7 +24,7 @@ const StudentDashboard = () => {
     e.preventDefault();
     if (user && registeringId) {
       mockService.registerStudent(registeringId, user, regForm);
-      setEvents(prev => prev.map(ev => { // Optimistic update
+      setEvents(prev => prev.map(ev => { 
         if (ev.id === registeringId) {
           return {
             ...ev,
@@ -46,65 +45,69 @@ const StudentDashboard = () => {
   );
 
   return (
-    <div>
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Upcoming Events</h1>
-          <p className="text-gray-500">Discover and participate in college activities</p>
-        </div>
-        <div className="mt-4 md:mt-0 relative w-full md:w-64">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search events..." 
-            className="w-full pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+    <div className="fade-in">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1 className="text-2xl font-bold">Upcoming Events</h1>
+            <p className="text-gray-500">Discover and participate in college activities</p>
+          </div>
+          <div style={{ position: 'relative', width: '300px' }}>
+            <Search className="text-gray-400" size={18} style={{ position: 'absolute', left: '10px', top: '10px' }} />
+            <input 
+              type="text" 
+              placeholder="Search events..." 
+              className="form-input"
+              style={{ paddingLeft: '2.5rem' }}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid-3">
         {filteredEvents.map(event => {
           const isRegistered = event.registrations.some(r => r.studentId === user?.id);
           
           return (
-            <div key={event.id} className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow overflow-hidden flex flex-col">
-              <div className="h-2 bg-brand-500"></div>
-              <div className="p-6 flex-1">
-                <div className="text-xs font-semibold text-brand-600 mb-2 uppercase tracking-wide">{event.department}</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2 leading-tight">{event.title}</h3>
+            <div key={event.id} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ height: '6px', background: 'var(--primary)' }}></div>
+              <div className="card-body" style={{ flex: 1 }}>
+                <div className="text-xs font-bold mb-2 uppercase" style={{ color: 'var(--primary)' }}>{event.department}</div>
+                <h3 className="text-lg font-bold mb-2">{event.title}</h3>
                 
-                <div className="space-y-2 mt-4 text-sm text-gray-600">
-                  <div className="flex items-center">
+                <div style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--gray-600)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Calendar size={16} className="mr-2 text-gray-400" />
                     {new Date(event.date).toDateString()}
                   </div>
-                  <div className="flex items-center">
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Clock size={16} className="mr-2 text-gray-400" />
                     {event.startTime} - {event.endTime}
                   </div>
-                  <div className="flex items-center">
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <MapPin size={16} className="mr-2 text-gray-400" />
                     {mockService.getHalls().find(h => h.id === event.hallId)?.name}
                   </div>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-gray-100 text-sm">
+                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--gray-100)', fontSize: '0.875rem' }}>
                   <span className="text-gray-500">Guest: </span>
-                  <span className="font-medium text-gray-800">{event.guestName}</span>
+                  <span className="font-medium">{event.guestName}</span>
                 </div>
               </div>
 
-              <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
+              <div style={{ padding: '1rem', background: 'var(--gray-50)', borderTop: '1px solid var(--gray-100)' }}>
                 {isRegistered ? (
-                  <button disabled className="w-full bg-green-100 text-green-700 font-medium py-2 rounded-lg cursor-default border border-green-200">
+                  <button disabled className="btn" style={{ width: '100%', background: 'var(--success-bg)', color: 'var(--success-text)', border: '1px solid #bbf7d0', cursor: 'default' }}>
                     Registered
                   </button>
                 ) : (
                   <button 
                     onClick={() => handleRegisterClick(event.id)}
-                    className="w-full bg-brand-600 text-white font-medium py-2 rounded-lg hover:bg-brand-700 transition-colors"
+                    className="btn btn-primary"
+                    style={{ width: '100%' }}
                   >
                     Register Now
                   </button>
@@ -115,68 +118,65 @@ const StudentDashboard = () => {
         })}
       </div>
 
-      {/* Registration Modal */}
       {registeringId && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in-95">
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div className="card" style={{ maxWidth: '450px', width: '100%', padding: '1.5rem' }}>
             <h3 className="text-xl font-bold mb-4">Complete Registration</h3>
             <p className="text-gray-500 text-sm mb-6">
               You are registering for <strong>{events.find(e => e.id === registeringId)?.title}</strong>.
             </p>
             
-            <form onSubmit={submitRegistration} className="space-y-4">
-               {/* Read-only Student Name */}
-               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Student Name</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User size={18} className="text-gray-400" />
-                  </div>
+            <form onSubmit={submitRegistration}>
+               <div className="mb-4">
+                <label className="input-label">Student Name</label>
+                <div style={{ position: 'relative' }}>
+                  <User size={18} className="text-gray-400" style={{ position: 'absolute', left: '10px', top: '10px' }} />
                   <input 
                     type="text" 
                     readOnly
-                    className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg outline-none text-gray-600"
+                    className="form-input"
+                    style={{ paddingLeft: '2.5rem', background: 'var(--gray-50)' }}
                     value={user?.name || ''}
                   />
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="rollNo" className="block text-sm font-medium text-gray-700 mb-1.5">Roll Number</label>
+              <div className="mb-4">
+                <label htmlFor="rollNo" className="input-label">Roll Number</label>
                 <input 
                   id="rollNo"
                   type="text" 
                   required
-                  placeholder="e.g., CS2023001"
-                  className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                  className="form-input"
                   value={regForm.rollNo}
                   onChange={e => setRegForm({...regForm, rollNo: e.target.value})}
                 />
               </div>
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1.5">Phone Number</label>
+              <div className="mb-6">
+                <label htmlFor="phone" className="input-label">Phone Number</label>
                 <input 
                   id="phone"
                   type="tel" 
                   required
-                  placeholder="e.g., 9876543210"
-                  className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                  className="form-input"
                   value={regForm.phone}
                   onChange={e => setRegForm({...regForm, phone: e.target.value})}
                 />
               </div>
               
-              <div className="flex space-x-3 mt-6">
+              <div style={{ display: 'flex', gap: '1rem' }}>
                 <button 
                   type="button" 
                   onClick={() => setRegisteringId(null)}
-                  className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
+                  className="btn btn-secondary"
+                  style={{ flex: 1 }}
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
-                  className="flex-1 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium shadow-sm"
+                  className="btn btn-primary"
+                  style={{ flex: 1 }}
                 >
                   Confirm
                 </button>

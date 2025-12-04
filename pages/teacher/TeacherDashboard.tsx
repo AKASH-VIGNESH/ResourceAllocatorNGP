@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { mockService } from '../../services/mockData';
 import { Event, ExchangeRequest } from '../../types';
-import { Calendar, Users, MapPin, Clock, ArrowRight, Inbox, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { Calendar, Users, MapPin, ArrowRight, Inbox, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../../App';
 
 const TeacherDashboard = () => {
@@ -10,7 +10,6 @@ const TeacherDashboard = () => {
   const [myEvents, setMyEvents] = useState<Event[]>([]);
   const [exchangeRequests, setExchangeRequests] = useState<ExchangeRequest[]>([]);
   
-  // State for the confirmation modal
   const [actionConfirmation, setActionConfirmation] = useState<{
     request: ExchangeRequest;
     isApproving: boolean;
@@ -26,8 +25,6 @@ const TeacherDashboard = () => {
     if (!user) return;
     const allEvents = mockService.getEvents();
     setMyEvents(allEvents.filter(e => e.organizerId === user.id));
-    
-    // Fetch pending requests
     setExchangeRequests(mockService.getPendingRequestsForUser(user.id));
   };
 
@@ -37,100 +34,95 @@ const TeacherDashboard = () => {
 
   const confirmAction = () => {
     if (!actionConfirmation) return;
-
     const { request, isApproving } = actionConfirmation;
     mockService.resolveExchangeRequest(request.id, isApproving);
-    
     refreshData();
-    setActionConfirmation(null); // Close modal
+    setActionConfirmation(null);
   };
 
   return (
-    <div className="space-y-6 relative">
-      <div className="flex justify-between items-center">
+    <div className="fade-in">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <h1 className="text-2xl font-bold">Dashboard</h1>
           <p className="text-gray-500">Welcome back, {user?.name}</p>
         </div>
         <Link 
           to="/teacher/book" 
-          className="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm flex items-center"
+          className="btn btn-primary"
         >
           <span className="mr-2">+</span> Book a Hall
         </Link>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Upcoming Events</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
-                {myEvents.filter(e => new Date(e.date) >= new Date()).length}
-              </p>
-            </div>
-            <div className="bg-brand-50 p-3 rounded-lg text-brand-600">
-              <Calendar size={24} />
-            </div>
+      <div className="grid-3 mb-6">
+        <div className="card" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p className="text-sm font-medium text-gray-500">Upcoming Events</p>
+            <p className="text-2xl font-bold mt-2">
+              {myEvents.filter(e => new Date(e.date) >= new Date()).length}
+            </p>
+          </div>
+          <div style={{ background: 'var(--primary-bg)', color: 'var(--primary)', padding: '0.75rem', borderRadius: '0.5rem' }}>
+            <Calendar size={24} />
           </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Total Participants</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
-                {myEvents.reduce((acc, curr) => acc + curr.registrations.length, 0)}
-              </p>
-            </div>
-            <div className="bg-green-50 p-3 rounded-lg text-green-600">
-              <Users size={24} />
-            </div>
+        <div className="card" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p className="text-sm font-medium text-gray-500">Total Participants</p>
+            <p className="text-2xl font-bold mt-2">
+              {myEvents.reduce((acc, curr) => acc + curr.registrations.length, 0)}
+            </p>
+          </div>
+          <div style={{ background: 'var(--success-bg)', color: 'var(--success-text)', padding: '0.75rem', borderRadius: '0.5rem' }}>
+            <Users size={24} />
           </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Halls Booked</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{myEvents.length}</p>
-            </div>
-            <div className="bg-purple-50 p-3 rounded-lg text-purple-600">
-              <MapPin size={24} />
-            </div>
+        <div className="card" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p className="text-sm font-medium text-gray-500">Halls Booked</p>
+            <p className="text-2xl font-bold mt-2">{myEvents.length}</p>
+          </div>
+          <div style={{ background: 'var(--purple-bg)', color: 'var(--purple-text)', padding: '0.75rem', borderRadius: '0.5rem' }}>
+            <MapPin size={24} />
           </div>
         </div>
       </div>
 
-      {/* Notifications / Exchange Requests */}
+      {/* Notifications */}
       {exchangeRequests.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm border border-orange-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-orange-100 bg-orange-50 flex items-center">
-            <Inbox className="text-orange-600 mr-2" size={20} />
-            <h2 className="text-lg font-bold text-orange-900">Incoming Hall Exchange Requests</h2>
+        <div className="card mb-6" style={{ borderColor: 'var(--warning-text)' }}>
+          <div className="card-header" style={{ background: 'var(--warning-bg)', borderBottomColor: 'var(--warning-bg)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', color: 'var(--warning-text)', fontWeight: 'bold' }}>
+              <Inbox className="mr-2" size={20} />
+              Incoming Hall Exchange Requests
+            </div>
           </div>
-          <div className="divide-y divide-gray-100">
+          <div>
             {exchangeRequests.map(req => (
-              <div key={req.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-gray-50">
+              <div key={req.id} style={{ padding: '1.5rem', borderBottom: '1px solid var(--gray-100)', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <div className="flex items-center mb-1">
-                    <span className="font-bold text-gray-900 mr-2">{req.requesterName}</span>
+                  <div className="mb-1">
+                    <span className="font-bold mr-2">{req.requesterName}</span>
                     <span className="text-sm text-gray-500">wants to book your slot for:</span>
                   </div>
-                  <p className="text-lg font-semibold text-brand-700">{req.proposedEventDetails.title}</p>
+                  <p className="text-lg font-bold" style={{ color: 'var(--primary)' }}>{req.proposedEventDetails.title}</p>
                   <p className="text-sm text-gray-600 mt-1">
                     Replacing your event: <strong>{req.targetEventTitle}</strong> on {new Date(req.proposedEventDetails.date).toDateString()}
                   </p>
                 </div>
-                <div className="flex items-center space-x-3 mt-4 md:mt-0">
+                <div style={{ display: 'flex', gap: '0.75rem' }}>
                   <button 
                     onClick={() => initiateAction(req, false)}
-                    className="flex items-center px-4 py-2 border border-red-200 text-red-700 rounded-lg hover:bg-red-50 font-medium transition-colors"
+                    className="btn"
+                    style={{ border: '1px solid var(--danger-bg)', color: 'var(--danger)', background: 'white' }}
                   >
                     <XCircle size={18} className="mr-2" /> Reject
                   </button>
                   <button 
                     onClick={() => initiateAction(req, true)}
-                    className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium shadow-sm transition-colors"
+                    className="btn btn-success"
                   >
                     <CheckCircle size={18} className="mr-2" /> Approve Swap
                   </button>
@@ -142,49 +134,47 @@ const TeacherDashboard = () => {
       )}
 
       {/* Events Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-900">My Scheduled Events</h2>
+      <div className="card">
+        <div className="card-header">
+          <h2 className="text-lg font-bold">My Scheduled Events</h2>
         </div>
         
         {myEvents.length === 0 ? (
-          <div className="p-12 text-center text-gray-500">
+          <div className="text-center" style={{ padding: '3rem', color: 'var(--gray-500)' }}>
             You haven't booked any events yet.
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-600">
-              <thead className="bg-gray-50 text-gray-700 font-medium border-b border-gray-100">
+          <div className="table-container">
+            <table className="table">
+              <thead>
                 <tr>
-                  <th className="px-6 py-3">Program Name</th>
-                  <th className="px-6 py-3">Date & Time</th>
-                  <th className="px-6 py-3">Hall</th>
-                  <th className="px-6 py-3">Registrations</th>
-                  <th className="px-6 py-3">Status</th>
-                  <th className="px-6 py-3">Action</th>
+                  <th>Program Name</th>
+                  <th>Date & Time</th>
+                  <th>Hall</th>
+                  <th>Registrations</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody>
                 {myEvents.map(event => (
-                  <tr key={event.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900">{event.title}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col">
+                  <tr key={event.id}>
+                    <td className="font-medium">{event.title}</td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <span>{new Date(event.date).toLocaleDateString()}</span>
-                        <span className="text-xs text-gray-400">{event.startTime} - {event.endTime}</span>
+                        <span className="text-xs text-gray-500">{event.startTime} - {event.endTime}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-brand-600">{mockService.getHalls().find(h => h.id === event.hallId)?.name}</td>
-                    <td className="px-6 py-4">{event.registrations.length} / {event.expectedParticipants}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        event.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
+                    <td style={{ color: 'var(--primary)' }}>{mockService.getHalls().find(h => h.id === event.hallId)?.name}</td>
+                    <td>{event.registrations.length} / {event.expectedParticipants}</td>
+                    <td>
+                      <span className={`badge ${event.status === 'CONFIRMED' ? 'badge-success' : 'badge-danger'}`}>
                         {event.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <Link to={`/teacher/event/${event.id}`} className="text-brand-600 hover:text-brand-800 font-medium flex items-center text-xs">
+                    <td>
+                      <Link to={`/teacher/event/${event.id}`} style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center', fontSize: '0.75rem', fontWeight: 500, textDecoration: 'none' }}>
                         Details <ArrowRight size={14} className="ml-1" />
                       </Link>
                     </td>
@@ -198,46 +188,34 @@ const TeacherDashboard = () => {
 
       {/* Confirmation Modal */}
       {actionConfirmation && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 animate-in zoom-in-95">
-            <div className={`flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-4 ${
-              actionConfirmation.isApproving ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
-            }`}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div className="card" style={{ maxWidth: '400px', width: '100%', padding: '1.5rem' }}>
+            <div style={{ width: '3rem', height: '3rem', borderRadius: '50%', margin: '0 auto 1rem auto', display: 'flex', alignItems: 'center', justifyContent: 'center', background: actionConfirmation.isApproving ? 'var(--success-bg)' : 'var(--danger-bg)', color: actionConfirmation.isApproving ? 'var(--success-text)' : 'var(--danger-text)' }}>
               <AlertTriangle size={24} />
             </div>
             
-            <h3 className="text-xl font-bold text-gray-900 text-center mb-2">
+            <h3 className="text-xl font-bold text-center mb-2">
               {actionConfirmation.isApproving ? 'Approve Exchange Request?' : 'Reject Request?'}
             </h3>
             
             <p className="text-center text-gray-500 text-sm mb-6">
-              {actionConfirmation.isApproving ? (
-                <>
-                  By approving, your event <strong>"{actionConfirmation.request.targetEventTitle}"</strong> will be cancelled to allow <strong>"{actionConfirmation.request.proposedEventDetails.title}"</strong> to take place. This cannot be undone.
-                </>
-              ) : (
-                <>
-                  Are you sure you want to reject the request for <strong>"{actionConfirmation.request.proposedEventDetails.title}"</strong>? The other staff member will be notified.
-                </>
-              )}
+              {actionConfirmation.isApproving ? 'This will cancel your current event to allow the new one. This cannot be undone.' : 'Are you sure you want to reject the request?'}
             </p>
             
-            <div className="flex space-x-3">
+            <div style={{ display: 'flex', gap: '1rem' }}>
               <button 
                 onClick={() => setActionConfirmation(null)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+                className="btn btn-secondary"
+                style={{ flex: 1 }}
               >
                 Cancel
               </button>
               <button 
                 onClick={confirmAction}
-                className={`flex-1 px-4 py-2 rounded-lg text-white font-medium shadow-sm transition-colors ${
-                  actionConfirmation.isApproving 
-                    ? 'bg-green-600 hover:bg-green-700' 
-                    : 'bg-red-600 hover:bg-red-700'
-                }`}
+                className={`btn ${actionConfirmation.isApproving ? 'btn-success' : 'btn-danger'}`}
+                style={{ flex: 1 }}
               >
-                {actionConfirmation.isApproving ? 'Yes, Approve Swap' : 'Reject Request'}
+                {actionConfirmation.isApproving ? 'Yes, Approve' : 'Reject'}
               </button>
             </div>
           </div>
