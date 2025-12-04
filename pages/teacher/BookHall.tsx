@@ -129,7 +129,8 @@ const BookHall = () => {
                     name="date"
                     required
                     min={new Date().toISOString().split('T')[0]}
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none text-gray-900"
+                    style={{ colorScheme: 'light' }}
                     value={formData.date}
                     onChange={handleChange}
                   />
@@ -149,7 +150,8 @@ const BookHall = () => {
                     type="time" 
                     name="startTime"
                     required
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none text-gray-900"
+                    style={{ colorScheme: 'light' }}
                     value={formData.startTime}
                     onChange={handleChange}
                   />
@@ -167,7 +169,8 @@ const BookHall = () => {
                     type="time" 
                     name="endTime"
                     required
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none text-gray-900"
+                    style={{ colorScheme: 'light' }}
                     value={formData.endTime}
                     onChange={handleChange}
                   />

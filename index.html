@@ -41,11 +41,12 @@
         background: #94a3b8; 
       }
 
-      /* Force native date/time picker trailing icons to be black */
-      input[type="date"]::-webkit-calendar-picker-indicator,
-      input[type="time"]::-webkit-calendar-picker-indicator {
-        cursor: pointer;
-        filter: invert(0) brightness(0);
+      /* Force native inputs to use light mode rendering. 
+         This ensures the calendar/clock icons are always black 
+         and the background is white, even if the OS is in Dark Mode. */
+      input[type="date"],
+      input[type="time"] {
+        color-scheme: light;
       }
     </style>
   <script type="importmap">
