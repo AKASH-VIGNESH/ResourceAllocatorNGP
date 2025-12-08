@@ -164,7 +164,9 @@ const BookHall = () => {
               >
                 <option value="">-- Choose a Hall --</option>
                 {halls.map(h => (
-                  <option key={h.id} value={h.id}>{h.name} (Capacity: {h.capacity})</option>
+                  <option key={h.id} value={h.id}>
+                    {h.name} (Capacity: {h.capacity}) — Includes: {h.amenities.join(', ')}
+                  </option>
                 ))}
               </select>
             </div>
