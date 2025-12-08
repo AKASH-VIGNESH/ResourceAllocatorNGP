@@ -85,6 +85,14 @@ input, button, select, textarea {
 /* Force light mode inputs */
 input[type="date"], input[type="time"] { color-scheme: light; }
 
+/* Ensure native picker icons are black */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0) !important;
+  opacity: 1;
+  cursor: pointer;
+}
+
 /* Layout Components */
 .layout-container {
   display: flex;
@@ -322,3 +330,42 @@ input[type="date"], input[type="time"] { color-scheme: light; }
 /* Animation classes */
 .fade-in { animation: fadeIn 0.3s ease-in; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Date Strip */
+.date-strip {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.5rem 0.25rem 1rem 0.25rem;
+  scrollbar-width: none; /* Firefox */
+}
+.date-strip::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+.date-card {
+  min-width: 80px;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--gray-200);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--white);
+  flex-shrink: 0;
+}
+.date-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+.date-card.selected {
+  background-color: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+  box-shadow: var(--shadow);
+}
+.date-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 0.5rem auto 0 auto;
+}

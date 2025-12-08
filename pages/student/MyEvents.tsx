@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../App';
 import { mockService } from '../../services/mockData';
 import { Event } from '../../types';
-import { Calendar, Clock, MapPin, CheckCircle } from 'lucide-react';
+import { Calendar, Clock, MapPin, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 const MyEvents = () => {
   const { user } = useAuth();
@@ -31,16 +31,40 @@ const MyEvents = () => {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {myEvents.map(event => (
-            <div key={event.id} className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+            <div key={event.id} className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', opacity: event.status === 'CANCELLED' ? 0.8 : 1 }}>
               <div style={{ flex: 1, minWidth: '300px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.25rem' }}>
                    <span style={{ color: 'var(--primary)' }}>{event.department}</span>
                    <span style={{ margin: '0 0.5rem', color: 'var(--gray-300)' }}>•</span>
-                   <span className="badge badge-success">
-                     <CheckCircle size={10} className="mr-1" /> Confirmed
-                   </span>
+                   
+                   {event.status === 'CONFIRMED' && (
+                     <span className="badge badge-success">
+                       <CheckCircle size={10} className="mr-1" /> Confirmed
+                     </span>
+                   )}
+                   {event.status === 'CANCELLED' && (
+                     <span className="badge badge-danger">
+                       <XCircle size={10} className="mr-1" /> Cancelled
+                     </span>
+                   )}
+                   {event.status === 'COMPLETED' && (
+                     <span className="badge badge-gray">
+                       Completed
+                     </span>
+                   )}
                 </div>
-                <h3 className="text-xl font-bold">{event.title}</h3>
+                
+                <h3 className="text-xl font-bold" style={{ textDecoration: event.status === 'CANCELLED' ? 'line-through' : 'none', color: event.status === 'CANCELLED' ? 'var(--gray-500)' : 'inherit' }}>
+                  {event.title}
+                </h3>
+
+                {event.status === 'CANCELLED' && (
+                  <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.75rem', background: 'var(--danger-bg)', color: 'var(--danger-text)', borderRadius: '0.5rem', fontSize: '0.875rem', display: 'inline-flex', alignItems: 'center' }}>
+                    <AlertCircle size={16} className="mr-2" />
+                    <span><strong>Event Cancelled:</strong> Please contact the organizer for more info.</span>
+                  </div>
+                )}
+
                 <div style={{ marginTop: '0.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', fontSize: '0.875rem', color: 'var(--gray-600)' }}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Calendar size={16} className="mr-1 text-gray-400" />
