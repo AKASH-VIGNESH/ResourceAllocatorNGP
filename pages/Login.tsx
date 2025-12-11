@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../App';
 import { UserRole } from '../types';
 import { mockService, USERS } from '../services/mockData';
-import { GraduationCap, BookOpen, User, Shield, ArrowLeft, Loader2, Info } from 'lucide-react';
+import { GraduationCap, BookOpen, User, Shield, ArrowLeft, Loader2, Info, Users, Coffee, Zap, Monitor, Box } from 'lucide-react';
 
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const [showSupportMenu, setShowSupportMenu] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -23,6 +24,7 @@ const Login = () => {
 
   const handleBack = () => {
     setSelectedRole(null);
+    setShowSupportMenu(false);
     setError('');
   };
 
@@ -46,6 +48,7 @@ const Login = () => {
         if (user.role === UserRole.TEACHER) navigate('/teacher');
         else if (user.role === UserRole.STUDENT) navigate('/student');
         else if (user.role === UserRole.PRINCIPAL) navigate('/principal');
+        else navigate('/support');
       } else {
         setError('Invalid email or password');
         setIsLoading(false);
@@ -58,6 +61,35 @@ const Login = () => {
   const fillCredentials = (uEmail: string, uPass: string) => {
     setEmail(uEmail);
     setPassword(uPass);
+  };
+
+  // Helper to render icon for role
+  const getRoleIcon = (role: UserRole) => {
+    switch (role) {
+      case UserRole.TEACHER: return <BookOpen size={24} />;
+      case UserRole.STUDENT: return <User size={24} />;
+      case UserRole.PRINCIPAL: return <Shield size={24} />;
+      case UserRole.STAFF_CANTEEN: return <Coffee size={24} />;
+      case UserRole.STAFF_SECURITY: return <Shield size={24} />;
+      case UserRole.STAFF_ELECTRICAL: return <Zap size={24} />;
+      case UserRole.STAFF_CS: return <Monitor size={24} />;
+      case UserRole.STAFF_STORE: return <Box size={24} />;
+      default: return <User size={24} />;
+    }
+  };
+
+  const getRoleName = (role: UserRole) => {
+    switch (role) {
+      case UserRole.TEACHER: return 'Staff';
+      case UserRole.STUDENT: return 'Student';
+      case UserRole.PRINCIPAL: return 'Admin';
+      case UserRole.STAFF_CANTEEN: return 'Canteen';
+      case UserRole.STAFF_SECURITY: return 'Security';
+      case UserRole.STAFF_ELECTRICAL: return 'Electrical';
+      case UserRole.STAFF_CS: return 'CS Lab';
+      case UserRole.STAFF_STORE: return 'Store';
+      default: return 'Login';
+    }
   };
 
   return (
@@ -81,38 +113,83 @@ const Login = () => {
         <div className="login-right">
           
           {!selectedRole ? (
-            <div className="fade-in">
-              <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold">Welcome Back</h2>
-                <p className="text-gray-500 mt-2">Please select your portal to continue</p>
+            !showSupportMenu ? (
+              <div className="fade-in">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-bold">Welcome Back</h2>
+                  <p className="text-gray-500 mt-2">Please select your portal to continue</p>
+                </div>
+
+                <div>
+                  <button onClick={() => handleRoleSelect(UserRole.TEACHER)} className="role-btn">
+                    <div className="role-icon"><BookOpen size={24} /></div>
+                    <div>
+                      <h3 className="font-bold">Staff Portal</h3>
+                      <p className="text-sm text-gray-500">Book halls & manage events</p>
+                    </div>
+                  </button>
+
+                  <button onClick={() => handleRoleSelect(UserRole.STUDENT)} className="role-btn">
+                    <div className="role-icon"><User size={24} /></div>
+                    <div>
+                      <h3 className="font-bold">Student Portal</h3>
+                      <p className="text-sm text-gray-500">Register & view history</p>
+                    </div>
+                  </button>
+
+                  <button onClick={() => handleRoleSelect(UserRole.PRINCIPAL)} className="role-btn">
+                    <div className="role-icon"><Shield size={24} /></div>
+                    <div>
+                      <h3 className="font-bold">Principal / Admin</h3>
+                      <p className="text-sm text-gray-500">Administrative oversight</p>
+                    </div>
+                  </button>
+
+                  <button onClick={() => setShowSupportMenu(true)} className="role-btn" style={{ background: 'var(--gray-50)' }}>
+                    <div className="role-icon"><Users size={24} /></div>
+                    <div>
+                      <h3 className="font-bold">Support & Logistics</h3>
+                      <p className="text-sm text-gray-500">Canteen, Security, Electrical, Store</p>
+                    </div>
+                  </button>
+                </div>
               </div>
-
-              <div>
-                <button onClick={() => handleRoleSelect(UserRole.TEACHER)} className="role-btn">
-                  <div className="role-icon"><BookOpen size={24} /></div>
-                  <div>
-                    <h3 className="font-bold">Staff Portal</h3>
-                    <p className="text-sm text-gray-500">Book halls & manage events</p>
-                  </div>
+            ) : (
+              <div className="fade-in">
+                 <button 
+                  onClick={() => setShowSupportMenu(false)}
+                  style={{ position: 'absolute', top: '2rem', left: '2rem', background: 'none', border: 'none', display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--gray-500)' }}
+                >
+                  <ArrowLeft size={16} className="mr-2" /> Back
                 </button>
-
-                <button onClick={() => handleRoleSelect(UserRole.STUDENT)} className="role-btn">
-                  <div className="role-icon"><User size={24} /></div>
-                  <div>
-                    <h3 className="font-bold">Student Portal</h3>
-                    <p className="text-sm text-gray-500">Register & view history</p>
-                  </div>
-                </button>
-
-                <button onClick={() => handleRoleSelect(UserRole.PRINCIPAL)} className="role-btn">
-                  <div className="role-icon"><Shield size={24} /></div>
-                  <div>
-                    <h3 className="font-bold">Principal / Admin</h3>
-                    <p className="text-sm text-gray-500">Administrative oversight</p>
-                  </div>
-                </button>
+                <div className="text-center mb-6 mt-4">
+                  <h2 className="text-xl font-bold">Support Services</h2>
+                  <p className="text-gray-500 text-sm mt-1">Select your department</p>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <button onClick={() => handleRoleSelect(UserRole.STAFF_CANTEEN)} className="role-btn" style={{ flexDirection: 'column', alignItems: 'center', textAlign: 'center', margin: 0 }}>
+                    <div className="role-icon" style={{ margin: '0 0 0.5rem 0' }}><Coffee size={24} /></div>
+                    <h3 className="font-bold text-sm">Canteen</h3>
+                  </button>
+                  <button onClick={() => handleRoleSelect(UserRole.STAFF_SECURITY)} className="role-btn" style={{ flexDirection: 'column', alignItems: 'center', textAlign: 'center', margin: 0 }}>
+                     <div className="role-icon" style={{ margin: '0 0 0.5rem 0' }}><Shield size={24} /></div>
+                     <h3 className="font-bold text-sm">Security</h3>
+                  </button>
+                   <button onClick={() => handleRoleSelect(UserRole.STAFF_ELECTRICAL)} className="role-btn" style={{ flexDirection: 'column', alignItems: 'center', textAlign: 'center', margin: 0 }}>
+                     <div className="role-icon" style={{ margin: '0 0 0.5rem 0' }}><Zap size={24} /></div>
+                     <h3 className="font-bold text-sm">Electrical</h3>
+                  </button>
+                   <button onClick={() => handleRoleSelect(UserRole.STAFF_CS)} className="role-btn" style={{ flexDirection: 'column', alignItems: 'center', textAlign: 'center', margin: 0 }}>
+                     <div className="role-icon" style={{ margin: '0 0 0.5rem 0' }}><Monitor size={24} /></div>
+                     <h3 className="font-bold text-sm">CS Lab</h3>
+                  </button>
+                  <button onClick={() => handleRoleSelect(UserRole.STAFF_STORE)} className="role-btn" style={{ flexDirection: 'column', alignItems: 'center', textAlign: 'center', margin: 0, gridColumn: '1 / -1' }}>
+                     <div className="role-icon" style={{ margin: '0 0 0.5rem 0' }}><Box size={24} /></div>
+                     <h3 className="font-bold text-sm">General Store</h3>
+                  </button>
+                </div>
               </div>
-            </div>
+            )
           ) : (
             /* Login Form */
             <div className="fade-in" style={{width: '100%'}}>
@@ -125,13 +202,10 @@ const Login = () => {
 
               <div className="text-center mb-6 mt-4">
                 <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--primary-bg)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem auto' }}>
-                  {selectedRole === UserRole.TEACHER && <BookOpen size={24} />}
-                  {selectedRole === UserRole.STUDENT && <User size={24} />}
-                  {selectedRole === UserRole.PRINCIPAL && <Shield size={24} />}
+                  {getRoleIcon(selectedRole)}
                 </div>
                 <h2 className="text-2xl font-bold">
-                  {selectedRole === UserRole.TEACHER ? 'Staff Login' :
-                   selectedRole === UserRole.STUDENT ? 'Student Login' : 'Admin Login'}
+                  {getRoleName(selectedRole)} Login
                 </h2>
               </div>
 

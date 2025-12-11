@@ -10,6 +10,7 @@ import PrincipalDashboard from './pages/principal/PrincipalDashboard';
 import Layout from './components/Layout';
 import EventDetails from './pages/teacher/EventDetails';
 import MyEvents from './pages/student/MyEvents';
+import SupportDashboard from './pages/support/SupportDashboard';
 
 // --- Auth Context ---
 interface AuthContextType {
@@ -91,6 +92,21 @@ const AppContent = () => {
         </ProtectedRoute>
       }>
         <Route index element={<PrincipalDashboard />} />
+      </Route>
+
+      {/* Support Staff Routes */}
+      <Route path="/support" element={
+        <ProtectedRoute allowedRoles={[
+          UserRole.STAFF_CANTEEN, 
+          UserRole.STAFF_SECURITY, 
+          UserRole.STAFF_ELECTRICAL, 
+          UserRole.STAFF_CS, 
+          UserRole.STAFF_STORE
+        ]}>
+          <Layout />
+        </ProtectedRoute>
+      }>
+        <Route index element={<SupportDashboard />} />
       </Route>
     </Routes>
   );

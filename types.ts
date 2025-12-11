@@ -1,7 +1,13 @@
 export enum UserRole {
   PRINCIPAL = 'PRINCIPAL',
   TEACHER = 'TEACHER',
-  STUDENT = 'STUDENT'
+  STUDENT = 'STUDENT',
+  // New Support Roles
+  STAFF_CANTEEN = 'STAFF_CANTEEN',
+  STAFF_SECURITY = 'STAFF_SECURITY',
+  STAFF_ELECTRICAL = 'STAFF_ELECTRICAL',
+  STAFF_CS = 'STAFF_CS',
+  STAFF_STORE = 'STAFF_STORE'
 }
 
 export interface User {
@@ -44,6 +50,15 @@ export interface Event {
   expectedParticipants: number;
   status: 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
   registrations: StudentRegistration[];
+  
+  // Logistical Requirements
+  refreshments?: string[]; // Canteen - Changed to Array
+  refreshmentsDelivered?: boolean; // Canteen Status
+  securityNeeds?: string; // Security - Keeps as string (instructions)
+  vipArrival?: string; // Security
+  electricalNeeds?: string[]; // Electrical
+  labRequirements?: string[]; // CS - Changed to Array
+  storeItems?: string[]; // General Store
 }
 
 export interface ExchangeRequest {

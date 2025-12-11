@@ -10,19 +10,26 @@ export const USERS: MockUser[] = [
   // --- Admin ---
   { id: 'u1', name: 'Dr. Principal', role: UserRole.PRINCIPAL, email: 'principal@drngp.ac.in', password: 'admin' },
   
-  // --- Staff (5 Users) ---
+  // --- Staff (Teachers) ---
   { id: 'u2', name: 'Prof. Sarah Smith', role: UserRole.TEACHER, department: 'Computer Science', email: 'staff@drngp.ac.in', password: 'staff' },
   { id: 'u3', name: 'Prof. Alan Turing', role: UserRole.TEACHER, department: 'Mathematics', email: 'math@drngp.ac.in', password: 'staff' },
   { id: 'u6', name: 'Prof. Grace Hopper', role: UserRole.TEACHER, department: 'Information Technology', email: 'it@drngp.ac.in', password: 'staff' },
   { id: 'u7', name: 'Prof. C.V. Raman', role: UserRole.TEACHER, department: 'Physics', email: 'physics@drngp.ac.in', password: 'staff' },
   { id: 'u8', name: 'Prof. Homi J. Bhabha', role: UserRole.TEACHER, department: 'Chemistry', email: 'chem@drngp.ac.in', password: 'staff' },
 
-  // --- Students (5 Users) ---
+  // --- Students ---
   { id: 'u4', name: 'John Doe', role: UserRole.STUDENT, department: 'Computer Science', email: 'student@drngp.ac.in', password: 'student' },
   { id: 'u5', name: 'Jane Roe', role: UserRole.STUDENT, department: 'Biotechnology', email: 'jane@drngp.ac.in', password: 'student' },
   { id: 'u9', name: 'Alice Williams', role: UserRole.STUDENT, department: 'Mathematics', email: 'alice@drngp.ac.in', password: 'student' },
   { id: 'u10', name: 'Bob Johnson', role: UserRole.STUDENT, department: 'Physics', email: 'bob@drngp.ac.in', password: 'student' },
   { id: 'u11', name: 'Charlie Davis', role: UserRole.STUDENT, department: 'Commerce', email: 'charlie@drngp.ac.in', password: 'student' },
+
+  // --- Support Staff (New) ---
+  { id: 's1', name: 'Canteen Manager', role: UserRole.STAFF_CANTEEN, email: 'canteen@drngp.ac.in', password: 'staff' },
+  { id: 's2', name: 'Security Chief', role: UserRole.STAFF_SECURITY, email: 'security@drngp.ac.in', password: 'staff' },
+  { id: 's3', name: 'Electrical Head', role: UserRole.STAFF_ELECTRICAL, email: 'electrical@drngp.ac.in', password: 'staff' },
+  { id: 's4', name: 'CS Lab Admin', role: UserRole.STAFF_CS, department: 'Computer Science', email: 'cslab@drngp.ac.in', password: 'staff' },
+  { id: 's5', name: 'Store Keeper', role: UserRole.STAFF_STORE, email: 'store@drngp.ac.in', password: 'staff' },
 ];
 
 export const HALLS: Hall[] = [
@@ -32,12 +39,16 @@ export const HALLS: Hall[] = [
   { id: 'h4', name: 'Lab Conference Room', capacity: 50, location: 'Lab Block', amenities: ['Smart TV', 'Video Conf'] },
 ];
 
+const today = new Date().toISOString().split('T')[0];
+const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+const dayAfter = new Date(Date.now() + 172800000).toISOString().split('T')[0];
+
 const INITIAL_EVENTS: Event[] = [
   {
     id: 'e1',
     title: 'AI in Healthcare Seminar',
     department: 'Computer Science',
-    date: new Date().toISOString().split('T')[0], // Today
+    date: today,
     startTime: '10:00',
     endTime: '12:00',
     hallId: 'h1',
@@ -49,13 +60,21 @@ const INITIAL_EVENTS: Event[] = [
     status: 'CONFIRMED',
     registrations: [
       { studentId: 'u4', studentName: 'John Doe', rollNo: 'CS2021001', phone: '9988776655', registeredAt: new Date().toISOString() }
-    ]
+    ],
+    // Logistical Data
+    refreshments: ['High tea and samosas for 130 pax', '5 VIP lunch packets'],
+    refreshmentsDelivered: false,
+    securityNeeds: 'Check IDs at entry. Reserve front row for VIPs.',
+    vipArrival: '10:00 AM Main Gate - White SUV',
+    electricalNeeds: ['Podium Mic', 'Handheld Mic x2', 'Projector HDMI', 'Spotlight'],
+    labRequirements: [],
+    storeItems: ['Notepads x10', 'Pens x10', 'Flower Bouquet x1', 'Welcome Banner']
   },
   {
     id: 'e2',
     title: 'Mathematics Symposium',
     department: 'Mathematics',
-    date: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Tomorrow
+    date: tomorrow,
     startTime: '09:00',
     endTime: '16:00',
     hallId: 'h2',
@@ -65,13 +84,19 @@ const INITIAL_EVENTS: Event[] = [
     guestName: 'Prof. R. Ramanujan',
     expectedParticipants: 80,
     status: 'CONFIRMED',
-    registrations: []
+    registrations: [],
+    // Logistical Data
+    refreshments: ['Morning coffee & biscuits', 'Veg Lunch Buffet for 90 pax'],
+    refreshmentsDelivered: false,
+    securityNeeds: 'Standard hall security.',
+    electricalNeeds: ['Projector', 'Laptop Audio Connection'],
+    storeItems: ['Whiteboard markers (Blue/Black)', 'Water bottles x20']
   },
   {
     id: 'e3',
     title: 'Quantum Physics Workshop',
     department: 'Physics',
-    date: new Date(Date.now() + 172800000).toISOString().split('T')[0], // Day after tomorrow
+    date: dayAfter,
     startTime: '14:00',
     endTime: '17:00',
     hallId: 'h4',
@@ -81,7 +106,29 @@ const INITIAL_EVENTS: Event[] = [
     guestName: 'Dr. S. Hawking',
     expectedParticipants: 40,
     status: 'CONFIRMED',
-    registrations: []
+    registrations: [],
+    refreshments: ['Evening tea and snacks'],
+    refreshmentsDelivered: false,
+    electricalNeeds: ['Smart TV Remote', 'Extension Cord']
+  },
+  {
+    id: 'e4',
+    title: 'CS Lab Demo: Cloud Computing',
+    department: 'Computer Science',
+    date: today,
+    startTime: '14:00',
+    endTime: '16:00',
+    hallId: 'h4',
+    organizerId: 'u2',
+    organizerName: 'Prof. Sarah Smith',
+    organizerContact: '9876543210',
+    guestName: 'Internal Faculty',
+    expectedParticipants: 30,
+    status: 'CONFIRMED',
+    registrations: [],
+    labRequirements: ['Access to Lab 3', 'AWS Credentials ready on 30 terminals', 'Ubuntu OS required'],
+    electricalNeeds: ['UPS Check for Lab 3'],
+    storeItems: ['Chart paper x5']
   }
 ];
 
@@ -153,6 +200,13 @@ class MockService {
 
   deleteEvent(eventId: string) {
     this.events = this.events.filter(e => e.id !== eventId);
+  }
+
+  // Support Actions
+  markRefreshmentsDelivered(eventId: string) {
+    this.events = this.events.map(e => 
+      e.id === eventId ? { ...e, refreshmentsDelivered: true } : e
+    );
   }
 
   // Student Actions

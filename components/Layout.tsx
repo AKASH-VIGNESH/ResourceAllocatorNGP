@@ -9,7 +9,11 @@ import {
   LogOut, 
   User as UserIcon, 
   ShieldCheck,
-  GraduationCap
+  GraduationCap,
+  Coffee,
+  Zap,
+  Box,
+  Monitor
 } from 'lucide-react';
 
 const SidebarItem = ({ to, icon: Icon, label, active }: { to: string; icon: any; label: string; active: boolean }) => (
@@ -54,6 +58,17 @@ const Layout = () => {
             <SidebarItem to="/principal" icon={ShieldCheck} label="Admin Overview" active={location.pathname === '/principal'} />
           </>
         );
+      // Support Roles
+      case UserRole.STAFF_CANTEEN:
+        return <SidebarItem to="/support" icon={Coffee} label="Canteen Orders" active={location.pathname === '/support'} />;
+      case UserRole.STAFF_SECURITY:
+        return <SidebarItem to="/support" icon={ShieldCheck} label="Security Detail" active={location.pathname === '/support'} />;
+      case UserRole.STAFF_ELECTRICAL:
+        return <SidebarItem to="/support" icon={Zap} label="Electrical Works" active={location.pathname === '/support'} />;
+      case UserRole.STAFF_CS:
+        return <SidebarItem to="/support" icon={Monitor} label="CS Lab Schedule" active={location.pathname === '/support'} />;
+      case UserRole.STAFF_STORE:
+        return <SidebarItem to="/support" icon={Box} label="Store Requests" active={location.pathname === '/support'} />;
       default:
         return null;
     }
@@ -84,7 +99,9 @@ const Layout = () => {
             </div>
             <div style={{overflow: 'hidden'}}>
               <p className="text-sm font-medium" style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{user?.name}</p>
-              <p className="text-xs" style={{opacity: 0.7, textTransform: 'capitalize'}}>{user?.role.toLowerCase()}</p>
+              <p className="text-xs" style={{opacity: 0.7, textTransform: 'capitalize'}}>
+                {user?.role.toLowerCase().replace('staff_', '').replace('_', ' ')}
+              </p>
             </div>
           </div>
           <button onClick={handleLogout} className="btn-logout">
