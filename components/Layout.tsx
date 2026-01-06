@@ -9,11 +9,11 @@ import {
   LogOut, 
   User as UserIcon, 
   ShieldCheck,
-  GraduationCap,
-  Coffee,
   Zap,
+  Coffee,
   Box,
-  Monitor
+  Monitor,
+  Cpu
 } from 'lucide-react';
 
 const SidebarItem = ({ to, icon: Icon, label, active }: { to: string; icon: any; label: string; active: boolean }) => (
@@ -42,33 +42,32 @@ const Layout = () => {
         return (
           <>
             <SidebarItem to="/teacher" icon={LayoutDashboard} label="Dashboard" active={location.pathname === '/teacher'} />
-            <SidebarItem to="/teacher/book" icon={PlusCircle} label="Book Hall" active={location.pathname === '/teacher/book'} />
+            <SidebarItem to="/teacher/book" icon={PlusCircle} label="New Allocation" active={location.pathname === '/teacher/book'} />
           </>
         );
       case UserRole.STUDENT:
         return (
           <>
-            <SidebarItem to="/student" icon={CalendarDays} label="Browse Events" active={location.pathname === '/student'} />
-            <SidebarItem to="/student/my-events" icon={UserIcon} label="My Registrations" active={location.pathname === '/student/my-events'} />
+            <SidebarItem to="/student" icon={CalendarDays} label="Active Events" active={location.pathname === '/student'} />
+            <SidebarItem to="/student/my-events" icon={UserIcon} label="My Participation" active={location.pathname === '/student/my-events'} />
           </>
         );
       case UserRole.PRINCIPAL:
         return (
           <>
-            <SidebarItem to="/principal" icon={ShieldCheck} label="Admin Overview" active={location.pathname === '/principal'} />
+            <SidebarItem to="/principal" icon={ShieldCheck} label="System Control" active={location.pathname === '/principal'} />
           </>
         );
-      // Support Roles
       case UserRole.STAFF_CANTEEN:
-        return <SidebarItem to="/support" icon={Coffee} label="Canteen Orders" active={location.pathname === '/support'} />;
+        return <SidebarItem to="/support" icon={Coffee} label="Logistics" active={location.pathname === '/support'} />;
       case UserRole.STAFF_SECURITY:
-        return <SidebarItem to="/support" icon={ShieldCheck} label="Security Detail" active={location.pathname === '/support'} />;
+        return <SidebarItem to="/support" icon={ShieldCheck} label="Safety Ops" active={location.pathname === '/support'} />;
       case UserRole.STAFF_ELECTRICAL:
-        return <SidebarItem to="/support" icon={Zap} label="Electrical Works" active={location.pathname === '/support'} />;
+        return <SidebarItem to="/support" icon={Zap} label="Infrastructure" active={location.pathname === '/support'} />;
       case UserRole.STAFF_CS:
-        return <SidebarItem to="/support" icon={Monitor} label="CS Lab Schedule" active={location.pathname === '/support'} />;
+        return <SidebarItem to="/support" icon={Monitor} label="Tech Assets" active={location.pathname === '/support'} />;
       case UserRole.STAFF_STORE:
-        return <SidebarItem to="/support" icon={Box} label="Store Requests" active={location.pathname === '/support'} />;
+        return <SidebarItem to="/support" icon={Box} label="Resource Store" active={location.pathname === '/support'} />;
       default:
         return null;
     }
@@ -80,11 +79,11 @@ const Layout = () => {
       <aside className="sidebar">
         <div className="sidebar-header">
           <div className="brand-icon">
-             <GraduationCap size={24} />
+             <Cpu size={24} />
           </div>
           <div>
-            <h1 className="text-lg font-bold">Dr. N.G.P. ASC</h1>
-            <p className="text-xs" style={{opacity: 0.7}}>Resource Allocator</p>
+            <h1 className="text-lg font-bold">RootFlow</h1>
+            <p className="text-xs" style={{opacity: 0.7}}>Resource Ecosystem</p>
           </div>
         </div>
 
@@ -106,7 +105,7 @@ const Layout = () => {
           </div>
           <button onClick={handleLogout} className="btn-logout">
             <LogOut size={16} />
-            <span>Sign Out</span>
+            <span>Terminate Session</span>
           </button>
         </div>
       </aside>
@@ -114,7 +113,7 @@ const Layout = () => {
       {/* Main Content */}
       <main className="main-content">
         <header className="mobile-header">
-          <h2 className="font-bold text-gray-800">Resource Allocator</h2>
+          <h2 className="font-bold text-gray-800">RootFlow</h2>
         </header>
         <div className="content-wrapper">
           <Outlet />

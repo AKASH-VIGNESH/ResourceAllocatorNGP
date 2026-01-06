@@ -39,34 +39,34 @@ const PrincipalDashboard = () => {
   return (
     <div className="fade-in">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Principal's Overview</h1>
-        <p className="text-gray-500">College-wide resource and event analytics</p>
+        <h1 className="text-2xl font-bold">RootFlow System Overview</h1>
+        <p className="text-gray-500">Intelligent analytics for entire resource ecosystem</p>
       </div>
 
       <div className="grid-4 mb-6">
         <div className="card" style={{ padding: '1.5rem' }}>
-          <p className="text-sm font-medium text-gray-500">Total Events</p>
+          <p className="text-sm font-medium text-gray-500">System Events</p>
           <p className="text-2xl font-bold mt-2" style={{ color: 'var(--primary)' }}>{events.length}</p>
         </div>
         <div className="card" style={{ padding: '1.5rem' }}>
-          <p className="text-sm font-medium text-gray-500">Today's Events</p>
+          <p className="text-sm font-medium text-gray-500">Live Today</p>
           <p className="text-2xl font-bold mt-2" style={{ color: 'var(--success)' }}>
             {events.filter(e => e.date === new Date().toISOString().split('T')[0]).length}
           </p>
         </div>
         <div className="card" style={{ padding: '1.5rem' }}>
-          <p className="text-sm font-medium text-gray-500">Student Engagements</p>
+          <p className="text-sm font-medium text-gray-500">Active Participation</p>
           <p className="text-2xl font-bold mt-2" style={{ color: 'var(--purple)' }}>{totalStudents}</p>
         </div>
         <div className="card" style={{ padding: '1.5rem' }}>
-          <p className="text-sm font-medium text-gray-500">Active Conflicts</p>
+          <p className="text-sm font-medium text-gray-500">Resolved Conflicts</p>
           <p className="text-2xl font-bold mt-2" style={{ color: 'var(--danger)' }}>0</p>
         </div>
       </div>
 
       <div className="grid-2 mb-6">
         <div className="card" style={{ padding: '1.5rem', height: '400px', display: 'flex', flexDirection: 'column' }}>
-          <h3 className="text-lg font-bold mb-4">Events per Department</h3>
+          <h3 className="text-lg font-bold mb-4">Allocations by Department</h3>
           <div style={{ flex: 1 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
@@ -81,7 +81,7 @@ const PrincipalDashboard = () => {
         </div>
 
         <div className="card" style={{ padding: '1.5rem', height: '400px', display: 'flex', flexDirection: 'column' }}>
-          <h3 className="text-lg font-bold mb-4">Upcoming Schedule</h3>
+          <h3 className="text-lg font-bold mb-4">Real-time Schedule</h3>
           <div style={{ overflowY: 'auto', flex: 1 }}>
             {events.slice(0, 5).map(e => (
                <div key={e.id} style={{ display: 'flex', alignItems: 'center', padding: '0.75rem', marginBottom: '0.5rem', border: '1px solid var(--gray-100)', borderRadius: '0.5rem' }}>
@@ -104,18 +104,18 @@ const PrincipalDashboard = () => {
 
       <div className="card">
         <div className="card-header">
-          <h3 className="text-lg font-bold">All Events Monitor</h3>
+          <h3 className="text-lg font-bold">Global Hub Monitor</h3>
         </div>
         <div className="table-container">
           <table className="table">
             <thead>
               <tr>
-                <th>Event</th>
-                <th>Organizer</th>
-                <th>Department</th>
-                <th>Hall</th>
+                <th>Resource Entity</th>
+                <th>Lead</th>
+                <th>Functional Unit</th>
+                <th>Location Node</th>
                 <th>Status</th>
-                <th className="text-right">Action</th>
+                <th className="text-right">Ops</th>
               </tr>
             </thead>
             <tbody>
@@ -135,7 +135,7 @@ const PrincipalDashboard = () => {
                       onClick={() => handleDeleteClick(event)}
                       className="btn"
                       style={{ color: 'var(--danger)', padding: '0.5rem' }}
-                      title="Permanently Delete Event"
+                      title="Decommission Resource Event"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -153,13 +153,13 @@ const PrincipalDashboard = () => {
             <div style={{ width: '3rem', height: '3rem', borderRadius: '50%', margin: '0 auto 1rem auto', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--danger-bg)', color: 'var(--danger)' }}>
               <AlertTriangle size={24} />
             </div>
-            <h3 className="text-xl font-bold text-center mb-2">Delete Event?</h3>
+            <h3 className="text-xl font-bold text-center mb-2">Decommission Node?</h3>
             <p className="text-center text-gray-500 text-sm mb-6">
-              Are you sure you want to permanently delete <strong>{eventToDelete.title}</strong>? 
+              Confirm decommissioning of <strong>{eventToDelete.title}</strong>. This will release all associated system resources.
             </p>
             <div style={{ display: 'flex', gap: '1rem' }}>
-              <button onClick={() => setEventToDelete(null)} className="btn btn-secondary" style={{ flex: 1 }}>Cancel</button>
-              <button onClick={confirmDelete} className="btn btn-danger" style={{ flex: 1 }}>Yes, Delete It</button>
+              <button onClick={() => setEventToDelete(null)} className="btn btn-secondary" style={{ flex: 1 }}>Abort</button>
+              <button onClick={confirmDelete} className="btn btn-danger" style={{ flex: 1 }}>Proceed</button>
             </div>
           </div>
         </div>
